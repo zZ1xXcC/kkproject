@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, ArrowRight, ArrowLeft, CheckCircle } from 'lucide-react';
+import { X, ArrowRight, ArrowLeft, CheckCircle, RotateCcw } from 'lucide-react';
 
 interface OnboardingStep {
   id: string;
@@ -20,6 +20,7 @@ export function OnboardingTour({ isOpen, onClose, steps }: OnboardingTourProps) 
   const [currentStep, setCurrentStep] = useState(0);
   const [targetElement, setTargetElement] = useState<HTMLElement | null>(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [popupPosition, setPopupPosition] = useState({ top: '50%', left: '50%' });
 
   useEffect(() => {
     const handleResize = () => {
@@ -35,12 +36,55 @@ export function OnboardingTour({ isOpen, onClose, steps }: OnboardingTourProps) 
       setTargetElement(element);
       
       if (element) {
+        // Прокручиваем к элементу
         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
         // Добавляем подсветку
         element.style.position = 'relative';
         element.style.zIndex = '1001';
-        element.style.boxShadow = '0 0 0 4px rgba(182, 194, 252, 0.5)';
+        element.style.boxShadow = '0 0 0 4px rgba(182, 194, 252, 0.8)';
         element.style.borderRadius = '8px';
+        element.style.backgroundColor = 'rgba(182, 194, 252, 0.1)';
+        
+        // Блокируем клики на другие элементы
+        const allButtons = document.querySelectorAll('button, a, [role="button"]');
+        allButtons.forEach(btn => {
+          if (!element.contains(btn) && !btn.closest('.onboarding-popup')) {
+            (btn as HTMLElement).style.pointerEvents = 'none';
+            (btn as HTMLElement).style.opacity = '0.5';
+          }
+        });
+        
+        // Вычисляем позицию попапа относительно элемента
+        setTimeout(() => {
+          const rect = element.getBoundingClientRect();
+          const step = steps[currentStep];
+          let top = '50%';
+          let left = '50%';
+          
+          if (!isMobile) {
+            switch (step.position) {
+              case 'top':
+                top = `${rect.top - 20}px`;
+                left = `${rect.left + rect.width / 2}px`;
+                break;
+              case 'bottom':
+                top = `${rect.bottom + 20}px`;
+                left = `${rect.left + rect.width / 2}px`;
+                break;
+              case 'left':
+                top = `${rect.top + rect.height / 2}px`;
+                left = `${rect.left - 20}px`;
+                break;
+              case 'right':
+                top = `${rect.top + rect.height / 2}px`;
+                left = `${rect.right + 20}px`;
+                break;
+            }
+          }
+          
+          setPopupPosition({ top, left });
+        }, 100);
       }
     }
 
@@ -50,9 +94,17 @@ export function OnboardingTour({ isOpen, onClose, steps }: OnboardingTourProps) 
         targetElement.style.zIndex = '';
         targetElement.style.boxShadow = '';
         targetElement.style.borderRadius = '';
+        targetElement.style.backgroundColor = '';
+        
+        // Восстанавливаем клики на все элементы
+        const allButtons = document.querySelectorAll('button, a, [role="button"]');
+        allButtons.forEach(btn => {
+          (btn as HTMLElement).style.pointerEvents = '';
+          (btn as HTMLElement).style.opacity = '';
+        });
       }
     };
-  }, [currentStep, isOpen, steps, targetElement]);
+  }, [currentStep, isOpen, steps, targetElement, isMobile]);
 
   const nextStep = () => {
     if (steps[currentStep]?.action) {
@@ -87,18 +139,22 @@ export function OnboardingTour({ isOpen, onClose, steps }: OnboardingTourProps) 
       <div className="fixed inset-0 bg-black bg-opacity-50 z-1000" />
       
       {/* Tour popup */}
-      <div className="fixed z-1002 max-w-sm mx-4">
-        <div 
-          className="bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden"
-          style={{
-            position: 'fixed',
-            top: isMobile ? '50%' : '20%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            maxWidth: isMobile ? '90vw' : '400px',
-            width: '100%'
-          }}
-        >
+      <div 
+        className="fixed z-1002 onboarding-popup"
+        style={{
+          top: isMobile ? '50%' : popupPosition.top,
+          left: isMobile ? '50%' : popupPosition.left,
+          transform: isMobile ? 'translate(-50%, -50%)' : 
+            step.position === 'top' ? 'translate(-50%, -100%)' :
+            step.position === 'bottom' ? 'translate(-50%, 0%)' :
+            step.position === 'left' ? 'translate(-100%, -50%)' :
+            step.position === 'right' ? 'translate(0%, -50%)' :
+            'translate(-50%, -50%)',
+          maxWidth: isMobile ? '90vw' : '400px',
+          width: isMobile ? '90vw' : '400px'
+        }}
+      >
+        <div className="bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
           {/* Header */}
           <div 
             className="p-4 text-white relative"
@@ -206,10 +262,17 @@ export function useOnboarding() {
     localStorage.setItem('planify-onboarding-seen', 'true');
   };
 
+  const resetOnboarding = () => {
+    localStorage.removeItem('planify-onboarding-seen');
+    setHasSeenOnboarding(false);
+    setIsOnboardingOpen(true);
+  };
+
   return {
     isOnboardingOpen,
     hasSeenOnboarding,
     startOnboarding,
     completeOnboarding,
+    resetOnboarding,
   };
 }

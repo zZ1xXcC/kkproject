@@ -37,6 +37,23 @@ export function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
     }
   };
 
+  const getNotificationColor = (type: string) => {
+    switch (type) {
+      case 'board_added':
+        return '#3b82f6';
+      case 'admin_assigned':
+        return '#8b5cf6';
+      case 'task_assigned':
+        return '#10b981';
+      case 'task_deadline':
+        return '#f59e0b';
+      case 'task_completed':
+        return '#10b981';
+      default:
+        return '#6b7280';
+    }
+  };
+
   const handleNotificationClick = (notificationId: string) => {
     markNotificationAsRead(notificationId);
   };
@@ -88,11 +105,17 @@ export function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
               <div
                 key={notification.id}
                 onClick={() => handleNotificationClick(notification.id)}
-                className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors ${
+                className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors relative ${
                   !notification.isRead ? 'bg-blue-50' : ''
                 }`}
               >
-                <div className="flex items-start space-x-3">
+                {/* Цветная полоска слева */}
+                <div 
+                  className="absolute left-0 top-0 bottom-0 w-1"
+                  style={{ backgroundColor: getNotificationColor(notification.type) }}
+                ></div>
+                
+                <div className="flex items-start space-x-3 ml-2">
                   <div className="flex-shrink-0 mt-1">
                     {getNotificationIcon(notification.type)}
                   </div>

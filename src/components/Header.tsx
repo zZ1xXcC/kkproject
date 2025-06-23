@@ -328,8 +328,8 @@ export function Header({ currentView, onViewChange, onCreateTask }: HeaderProps)
             </button>
           </div>
 
-          {/* Навигация для десктопа */}
-          <nav className="hidden md:flex items-center space-x-1" data-tour="navigation">
+          {/* Навигация для десктопа с равными отступами */}
+          <nav className="hidden md:flex items-center space-x-3" data-tour="navigation">
             <button
               onClick={() => onViewChange('board')}
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors ${
@@ -393,7 +393,7 @@ export function Header({ currentView, onViewChange, onCreateTask }: HeaderProps)
           </nav>
         </div>
 
-        <div className="flex items-center space-x-2 md:space-x-4 flex-shrink-0">
+        <div className="flex items-center space-x-3 md:space-x-4 flex-shrink-0">
           <button
             onClick={onCreateTask}
             data-tour="create-task"
@@ -457,10 +457,10 @@ export function Header({ currentView, onViewChange, onCreateTask }: HeaderProps)
       </div>
 
       {/* Мобильная навигация */}
-      <nav className="md:hidden flex items-center space-x-1 mt-4 bg-gray-50 rounded-lg p-1 overflow-x-auto">
+      <nav className="md:hidden flex items-center justify-between bg-gray-50 rounded-lg p-1 mt-4 overflow-x-auto">
         <button
           onClick={() => onViewChange('board')}
-          className={`flex-shrink-0 flex items-center justify-center space-x-1 py-2 px-3 rounded-md font-medium transition-colors ${
+          className={`flex-1 flex items-center justify-center space-x-1 py-2 px-2 rounded-md font-medium transition-colors ${
             currentView === 'board'
               ? 'text-white shadow-sm'
               : 'text-gray-600'
@@ -472,7 +472,7 @@ export function Header({ currentView, onViewChange, onCreateTask }: HeaderProps)
         </button>
         <button
           onClick={() => onViewChange('calendar')}
-          className={`flex-shrink-0 flex items-center justify-center space-x-1 py-2 px-3 rounded-md font-medium transition-colors ${
+          className={`flex-1 flex items-center justify-center space-x-1 py-2 px-2 rounded-md font-medium transition-colors ${
             currentView === 'calendar'
               ? 'text-white shadow-sm'
               : 'text-gray-600'
@@ -484,7 +484,7 @@ export function Header({ currentView, onViewChange, onCreateTask }: HeaderProps)
         </button>
         <button
           onClick={() => onViewChange('analytics')}
-          className={`flex-shrink-0 flex items-center justify-center space-x-1 py-2 px-3 rounded-md font-medium transition-colors ${
+          className={`flex-1 flex items-center justify-center space-x-1 py-2 px-2 rounded-md font-medium transition-colors ${
             currentView === 'analytics'
               ? 'text-white shadow-sm'
               : 'text-gray-600'
@@ -496,7 +496,7 @@ export function Header({ currentView, onViewChange, onCreateTask }: HeaderProps)
         </button>
         <button
           onClick={() => onViewChange('users')}
-          className={`flex-shrink-0 flex items-center justify-center space-x-1 py-2 px-3 rounded-md font-medium transition-colors ${
+          className={`flex-1 flex items-center justify-center space-x-1 py-2 px-2 rounded-md font-medium transition-colors ${
             currentView === 'users'
               ? 'text-white shadow-sm'
               : 'text-gray-600'
@@ -508,7 +508,7 @@ export function Header({ currentView, onViewChange, onCreateTask }: HeaderProps)
         </button>
         <button
           onClick={() => onViewChange('profile')}
-          className={`flex-shrink-0 flex items-center justify-center space-x-1 py-2 px-3 rounded-md font-medium transition-colors ${
+          className={`flex-1 flex items-center justify-center space-x-1 py-2 px-2 rounded-md font-medium transition-colors ${
             currentView === 'profile'
               ? 'text-white shadow-sm'
               : 'text-gray-600'
@@ -520,7 +520,7 @@ export function Header({ currentView, onViewChange, onCreateTask }: HeaderProps)
         </button>
         <button
           onClick={() => onViewChange('manual')}
-          className={`flex-shrink-0 flex items-center justify-center space-x-1 py-2 px-3 rounded-md font-medium transition-colors ${
+          className={`flex-1 flex items-center justify-center space-x-1 py-2 px-2 rounded-md font-medium transition-colors ${
             currentView === 'manual'
               ? 'text-white shadow-sm'
               : 'text-gray-600'

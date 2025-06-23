@@ -1,5 +1,6 @@
 import React from 'react';
-import { FileText, ArrowLeft, CheckCircle, Users, Calendar, BarChart3, Settings, MessageCircle, Pin, Upload, Mic, User, Bell, Plus, LayoutGrid, Crown, Edit, Trash2, Share2, Eye, EyeOff, Save, X } from 'lucide-react';
+import { FileText, ArrowLeft, CheckCircle, Users, Calendar, BarChart3, Settings, MessageCircle, Pin, Upload, Mic, User, Bell, Plus, LayoutGrid, Crown, Edit, Trash2, Share2, Eye, EyeOff, Save, X, RotateCcw } from 'lucide-react';
+import { useOnboarding } from './OnboardingTour';
 
 interface ManualPageProps {
   onClose: () => void;
@@ -7,6 +8,7 @@ interface ManualPageProps {
 
 export function ManualPage({ onClose }: ManualPageProps) {
   const [activeSection, setActiveSection] = React.useState('intro');
+  const { resetOnboarding } = useOnboarding();
 
   const sections = [
     { id: 'intro', title: 'ВВЕДЕНИЕ', icon: FileText },
@@ -29,6 +31,11 @@ export function ManualPage({ onClose }: ManualPageProps) {
     }
   };
 
+  const handleStartTour = () => {
+    resetOnboarding();
+    onClose();
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Заголовок с градиентным фоном */}
@@ -45,13 +52,22 @@ export function ManualPage({ onClose }: ManualPageProps) {
             </div>
             <h1 className="text-2xl md:text-3xl font-bold text-white uppercase">РУКОВОДСТВО ПОЛЬЗОВАТЕЛЯ PLANIFY</h1>
           </div>
-          <button
-            onClick={onClose}
-            className="flex items-center space-x-2 px-4 py-2 text-white hover:bg-white/20 rounded-lg transition-colors backdrop-blur-sm"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span className="uppercase hidden md:inline">НАЗАД</span>
-          </button>
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={handleStartTour}
+              className="flex items-center space-x-2 px-4 py-2 text-white hover:bg-white/20 rounded-lg transition-colors backdrop-blur-sm"
+            >
+              <RotateCcw className="w-5 h-5" />
+              <span className="uppercase hidden md:inline">ПОВТОРИТЬ ОБУЧЕНИЕ</span>
+            </button>
+            <button
+              onClick={onClose}
+              className="flex items-center space-x-2 px-4 py-2 text-white hover:bg-white/20 rounded-lg transition-colors backdrop-blur-sm"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span className="uppercase hidden md:inline">НАЗАД</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -82,6 +98,18 @@ export function ManualPage({ onClose }: ManualPageProps) {
                 );
               })}
             </nav>
+            
+            {/* Кнопка повторного обучения в боковой панели */}
+            <div className="mt-6 pt-4 border-t border-gray-200">
+              <button
+                onClick={handleStartTour}
+                className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors text-white"
+                style={{ backgroundColor: '#b6c2fc' }}
+              >
+                <RotateCcw className="w-4 h-4" />
+                <span className="text-sm uppercase">ПОВТОРИТЬ ОБУЧЕНИЕ</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -109,6 +137,22 @@ export function ManualPage({ onClose }: ManualPageProps) {
                     Приложение предназначено для командной работы и позволяет эффективно организовать рабочие процессы, 
                     отслеживать прогресс выполнения задач и анализировать продуктивность команды.
                   </p>
+                  
+                  {/* Кнопка запуска обучения */}
+                  <div className="mb-4">
+                    <button
+                      onClick={handleStartTour}
+                      className="flex items-center space-x-2 px-6 py-3 text-white rounded-lg transition-colors font-medium uppercase"
+                      style={{ backgroundColor: '#b6c2fc' }}
+                    >
+                      <RotateCcw className="w-5 h-5" />
+                      <span>НАЧАТЬ ИНТЕРАКТИВНОЕ ОБУЧЕНИЕ</span>
+                    </button>
+                    <p className="text-sm text-gray-600 mt-2">
+                      Пройдите пошаговое обучение для знакомства с основными функциями приложения
+                    </p>
+                  </div>
+                  
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="text-center p-4 bg-blue-50 rounded-lg">
                       <LayoutGrid className="w-8 h-8 mx-auto mb-2 text-blue-600" />
@@ -501,7 +545,7 @@ export function ManualPage({ onClose }: ManualPageProps) {
             <div className="p-6 space-y-4">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3 uppercase">ТИПЫ УВЕДОМЛЕНИЙ:</h3>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3  uppercase">ТИПЫ УВЕДОМЛЕНИЙ:</h3>
                   <ul className="list-disc list-inside space-y-1 text-gray-700 ml-4">
                     <li>Назначение новых задач</li>
                     <li>Завершение задач</li>
@@ -634,6 +678,14 @@ export function ManualPage({ onClose }: ManualPageProps) {
                 </button>
               );
             })}
+            <button
+              onClick={handleStartTour}
+              className="flex-shrink-0 flex flex-col items-center space-y-1 px-3 py-2 rounded-lg transition-colors text-white"
+              style={{ backgroundColor: '#b6c2fc' }}
+            >
+              <RotateCcw className="w-4 h-4" />
+              <span className="text-xs uppercase whitespace-nowrap">ОБУЧЕНИЕ</span>
+            </button>
           </div>
         </div>
       </div>

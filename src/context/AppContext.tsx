@@ -405,6 +405,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         case 'UPDATE_TASK':
           if (action.inverse) {
             dispatch({ type: 'UPDATE_TASK', payload: { id: action.payload.id, updates: action.inverse } });
+            
+            // Удаляем уведомления о завершении, если задача была перемещена из "Выполнено"
+            if (action.payload.updates.status === 'completed' && action.inverse.status !== 'completed') {
+              const completionNotifications = state.notifications.filter(
+                n => n.type === 'task_completed' && n.relatedId === action.payload.id
+              );
+              completionNotifications.forEach(notification => {
+                dispatch({ type: 'DELETE_NOTIFICATION', payload: notification.id });
+              });
+            }
           }
           break;
         case 'ADD_USER':
@@ -564,6 +574,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         if (user.boardIds.length > 0) {
           dispatch({ type: 'SET_CURRENT_BOARD', payload: user.boardIds[0] });
         }
+      }
+      
+      // Для демо аккаунтов всегда сбрасываем онбординг
+      if (user.username === 'admin123' || user.username === 'user1234') {
+        localStorage.removeItem('planify-onboarding-seen');
       }
       
       return true;

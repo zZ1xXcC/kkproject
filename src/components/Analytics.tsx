@@ -159,13 +159,13 @@ export function Analytics() {
         {/* Распределение по статусам */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6">
           <h3 className="text-md md:text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
-            <PieChart className="w-4 h-4 md:w-5 md:h-5" style={{ color: '#fbffab' }} />
+            <PieChart className="w-4 h-4 md:w-5 md:h-5" style={{ color: '#4ade80' }} />
             <span className="uppercase">РАСПРЕДЕЛЕНИЕ ПО СТАТУСАМ</span>
           </h3>
           <div className="space-y-3 md:space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div className="w-3 h-3 md:w-4 md:h-4 bg-gray-300 rounded"></div>
+                <div className="w-3 h-3 md:w-4 md:h-4 rounded" style={{ backgroundColor: '#c2e1fc' }}></div>
                 <span className="text-xs md:text-sm text-gray-700 uppercase">СОЗДАНО</span>
               </div>
               <div className="flex items-center space-x-2">
@@ -220,18 +220,22 @@ export function Analytics() {
           </div>
         </div>
 
-        {/* Месячная статистика с визуальным представлением */}
+        {/* Месячная статистика с вертикальными колонками */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6">
           <h3 className="text-md md:text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
             <BarChart3 className="w-4 h-4 md:w-5 md:h-5" style={{ color: '#90ee90' }} />
             <span className="uppercase">СТАТИСТИКА ПО МЕСЯЦАМ</span>
           </h3>
           
-          {/* Визуальное представление с диаграммами */}
+          {/* Вертикальные колонки */}
           <div className="space-y-4 mb-4">
             {monthlyStats.slice(-6).map((stat, index) => {
               const maxTasks = Math.max(...monthlyStats.map(s => s.total));
-              const barWidth = maxTasks > 0 ? (stat.total / maxTasks) * 100 : 0;
+              const maxHeight = 120; // максимальная высота в пикселях
+              
+              const createdHeight = maxTasks > 0 ? (stat.created / maxTasks) * maxHeight : 0;
+              const inProgressHeight = maxTasks > 0 ? (stat.inProgress / maxTasks) * maxHeight : 0;
+              const completedHeight = maxTasks > 0 ? (stat.completed / maxTasks) * maxHeight : 0;
               
               return (
                 <div key={index} className="space-y-2">
@@ -239,17 +243,49 @@ export function Analytics() {
                     <span className="font-medium text-gray-900 uppercase">{stat.month}</span>
                     <span className="text-gray-600">{stat.total} задач</span>
                   </div>
-                  <div className="relative">
-                    <div className="w-full bg-gray-200 rounded-full h-3">
+                  
+                  {/* Вертикальные колонки */}
+                  <div className="flex items-end space-x-2 h-32">
+                    {/* Создано */}
+                    <div className="flex-1 flex flex-col items-center">
                       <div 
-                        className="bg-gradient-to-r from-blue-400 to-green-400 h-3 rounded-full transition-all duration-500"
-                        style={{ width: `${barWidth}%` }}
+                        className="w-full rounded-t transition-all duration-500"
+                        style={{ 
+                          backgroundColor: '#c2e1fc',
+                          height: `${createdHeight}px`,
+                          minHeight: stat.created > 0 ? '4px' : '0px'
+                        }}
                       ></div>
+                      <span className="text-xs text-gray-500 mt-1">{stat.created}</span>
+                      <span className="text-xs text-gray-400 uppercase">С</span>
                     </div>
-                    <div className="flex justify-between text-xs text-gray-500 mt-1">
-                      <span>Создано: {stat.created}</span>
-                      <span>В процессе: {stat.inProgress}</span>
-                      <span>Выполнено: {stat.completed}</span>
+                    
+                    {/* В процессе */}
+                    <div className="flex-1 flex flex-col items-center">
+                      <div 
+                        className="w-full rounded-t transition-all duration-500"
+                        style={{ 
+                          backgroundColor: '#fcfac2',
+                          height: `${inProgressHeight}px`,
+                          minHeight: stat.inProgress > 0 ? '4px' : '0px'
+                        }}
+                      ></div>
+                      <span className="text-xs text-gray-500 mt-1">{stat.inProgress}</span>
+                      <span className="text-xs text-gray-400 uppercase">П</span>
+                    </div>
+                    
+                    {/* Выполнено */}
+                    <div className="flex-1 flex flex-col items-center">
+                      <div 
+                        className="w-full rounded-t transition-all duration-500"
+                        style={{ 
+                          backgroundColor: '#c4fcc2',
+                          height: `${completedHeight}px`,
+                          minHeight: stat.completed > 0 ? '4px' : '0px'
+                        }}
+                      ></div>
+                      <span className="text-xs text-gray-500 mt-1">{stat.completed}</span>
+                      <span className="text-xs text-gray-400 uppercase">В</span>
                     </div>
                   </div>
                 </div>
@@ -315,7 +351,7 @@ export function Analytics() {
           // Десктопная версия - таблица
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="border-b border-gray-200" style={{ backgroundColor: '#a4d2fc' }}>
+              <thead className="border-b border-gray-200" style={{ backgroundColor: '#ffcfda' }}>
                 <tr>
                   <th className="text-left py-3 px-4 font-medium text-gray-700 uppercase">ПОЛЬЗОВАТЕЛЬ</th>
                   <th className="text-center py-3 px-4 font-medium text-gray-700 uppercase">ВСЕГО</th>

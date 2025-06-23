@@ -386,7 +386,7 @@ export function UserManagement() {
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="border-b border-gray-200" style={{ backgroundColor: '#ffcfda' }}>
+            <thead className="border-b border-gray-200" style={{ backgroundColor: '#add8ff' }}>
               <tr>
                 <th className="text-left py-4 px-6 font-medium text-gray-700 uppercase">ПОЛЬЗОВАТЕЛЬ</th>
                 <th className="text-left py-4 px-6 font-medium text-gray-700 uppercase">ВЫПОЛНЕНО</th>
